@@ -41,7 +41,12 @@ const PriceDropBarChart = () => {
     };
   };
 
-  return <Bar data={chartData} />;
+  return (
+    <div className='m-5'>
+      <h1 className='text-center text-xl p-4'>Price Drop Bar Chart</h1>
+      <Bar data={chartData} />
+    </div>
+  );
 };
 
 export default PriceDropBarChart;

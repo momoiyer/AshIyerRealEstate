@@ -1,9 +1,14 @@
+import { useState } from "react";
 import DatePickerComponent from "./DatePicker";
 
 const GraphFilter = () => {
   
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
+
   const handleFilter = () => {
     console.log("Here to filter data to display in graph");
+    console.log(`Selected start date is ${startDate} and end date is ${endDate}`);
   }
 
   return (
@@ -11,16 +16,21 @@ const GraphFilter = () => {
       <div className="m-5 flex">
         <div className="p-4">
           <h1 className="mb-4">Select Start Date</h1>
-          <DatePickerComponent />
+          <DatePickerComponent 
+            selectedDate={startDate} 
+            onChange={setStartDate}  />
         </div>
         <div className="p-4">
           <h1 className="mb-4">Select End  Date</h1>
-          <DatePickerComponent />
+          <DatePickerComponent  
+            selectedDate={endDate} 
+            onChange={setEndDate} />
         </div>
       </div>
       <button
         onClick={handleFilter}
-        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded w-full">
+        disabled={!startDate || !endDate}
+        className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded w-full">
         Filter
       </button>
     </div>

@@ -1,19 +1,16 @@
-import React, { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css"; // Import the CSS
 
-const DatePickerComponent = () => {
-  const [startDate, setStartDate] = useState(new Date());
+const DatePickerComponent = ({ selectedDate, onChange }) => {
 
   return (
-    <DatePicker 
-      selected={startDate} 
-      onChange={(date) => setStartDate(date)} 
+    <DatePicker
+      selected={selectedDate}
+      onChange={onChange}
       showMonthDropdown
-                showYearDropdown
-                dropdownMode="select" // Allows you to navigate directly to a specific month and year
-                className="form-input px-4 py-2 border rounded-md" // Tailwind classes
-            
+      showYearDropdown
+      dropdownMode="select"
+      className="form-input px-4 py-2 border rounded-md" 
     />
   );
 };
