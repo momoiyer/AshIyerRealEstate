@@ -8,6 +8,7 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const [currentView, setCurrentView] = useState('graph'); // Default view is 'graph'  
   const [fetchedData, setFetchedData] = useState([]); // State to hold the original fetched data
+  const [cityFilter, setCityFilter] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -18,6 +19,13 @@ export default function Home() {
 
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (fetchedData) {
+      const uniqueCities = Array.from(new Set(fetchedData.map(item => item.city)));
+      if (uniqueCities)
+        setCityFilter(uniqueCities);}
+  },[fetchedData])
 
   return (
     <main>
@@ -34,7 +42,11 @@ export default function Home() {
         </button>
       </div>
 
-      {currentView === 'graph' && <Graph data={fetchedData} />}
+      {currentView === 'graph' &&
+        <Graph
+        data={fetchedData}
+        cityList={cityFilter}
+        />}
       {currentView === 'table' && <TableView data={fetchedData} />}
     </main>
   );

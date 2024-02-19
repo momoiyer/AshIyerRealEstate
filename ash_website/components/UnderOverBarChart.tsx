@@ -1,26 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
+import { ChartProps } from './Chart.types';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const UnderOverBarChart = () => {
-  const [chartData, setChartData] = useState({
-    labels: [],
-    datasets: []
-  });
+const UnderOverBarChart = ({data}: ChartProps) => {
+  const [chartData, setChartData] = useState({labels: [], datasets: []});
 
   useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch('/api/readCSV');
-      const fetchedData = await response.json();
-
-      const formattedData = formatChartData(fetchedData.data);
-      setChartData(formattedData);
-    };
-
-    fetchData();
-  }, []);
+    if (data && data.length > 0) {
+      setChartData(formatChartData(data)); // Update chart data with filtered or original data
+    }
+  }, [data]);
 
   const formatChartData = (data) => {
     const labels = data.map(item => item.statDate);

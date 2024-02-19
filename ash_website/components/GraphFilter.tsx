@@ -2,11 +2,17 @@ import { useState } from "react";
 import DatePickerComponent from "./DatePicker";
 import { FilterProps } from "./GraphFilter.types";
 
-const GraphFilter = ({startDate, endDate,onChangeStartDate, onChangeEndDate}: FilterProps) => {  
+const GraphFilter = ({startDate, endDate,onChangeStartDate, onChangeEndDate, cityList, selectedCity, onChangeCitySelectoin}: FilterProps) => {  
+
+    // Handle selection change
+    const handleChange = (event) => {
+      onChangeCitySelectoin(event.target.value);
+  };
 
   const handleReset = () => {
     onChangeStartDate(null);
     onChangeEndDate(null);
+    onChangeCitySelectoin("");
   }
 
   return (
@@ -23,6 +29,14 @@ const GraphFilter = ({startDate, endDate,onChangeStartDate, onChangeEndDate}: Fi
           <DatePickerComponent  
             selectedDate={endDate} 
             onChange={onChangeEndDate} />
+        </div>
+        <div className="p-4">
+        <select value={selectedCity} onChange={handleChange} className="border rounded-md p-2">
+        <option value="">Select a City</option>
+        {cityList.map(city => (
+          <option key={city} value={city}>{city}</option>
+        ))}
+      </select>
         </div>
       </div>
       <button

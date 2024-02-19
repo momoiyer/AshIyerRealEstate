@@ -5,50 +5,18 @@ import { ChartProps } from './Chart.types';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const PriceDropBarChart = ({ startDate, endDate, fetchedData }: ChartProps) => {
-  // const [fetchedData, setFetchedData] = useState([]); // State to hold the original fetched data
+const PriceDropBarChart = ({ data }: ChartProps) => {
   const [chartData, setChartData] = useState({ labels: [], datasets: [] }); // State for the data to render in the chart
 
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     const response = await fetch('/api/readCSV');
-  //     const result = await response.json();
-  //     setFetchedData(result.data); 
-  //   };
-
-  //   fetchData();
-  // }, []);
-
-   // Filter fetched data whenever startDate, endDate, or fetchedData changes
-   useEffect(() => {
-     const filterData = () => {
-       let filteredData;
-       
-       if (startDate && endDate) {
-        filteredData = fetchedData.filter(item => {
-          const itemDate = new Date(item.statDate);
-          const start = startDate ? new Date(startDate) : null;
-          const end = endDate ? new Date(endDate) : null;
-          return (!start || itemDate >= start) && (!end || itemDate <= end);
-        });
-       }
-       
-       if (!filteredData)
-       filteredData = fetchedData;
-      
-
-      return formatChartData(filteredData);
-    };
-
-    if (fetchedData.length > 0) {
-      setChartData(filterData()); // Update chart data with filtered or original data
-     }
-     
-  }, [startDate, endDate, fetchedData]);
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setChartData(formatChartData(data)); // Update chart data with filtered or original data
+    }
+  }, [data]);
 
   const formatChartData = (data) => {
     const labels = data.map(item => item.statDate);
-    const prices = data.map(item => item.priceDrop); 
+    const prices = data.map(item => item.priceDrop);
 
     return {
       labels,
