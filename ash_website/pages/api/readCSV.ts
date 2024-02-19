@@ -2,19 +2,18 @@ import csv from 'csv-parser';
 import fs from "fs";
 import path from 'path';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { formatDateToShortString } from '@/utils/timeUtil';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   
   const data = [];
 
-  const directoryPath = path.join(process.cwd(), 'public', 'data'); // Adjust the path to your CSV file  
+  const directoryPath = path.join(process.cwd(), 'public', 'data');
 
-  //read rate csv file
   const fileToRead = fs.readdirSync(directoryPath);
 
   for (const file of fileToRead) {
     const filePath = path.join(directoryPath, file);
-    // console.log("Reading data from ", { filePath });
     const stream = fs.createReadStream(filePath).pipe(csv());
 
     let listPrice: string;
@@ -33,12 +32,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       underOverList = parseFloat(currentPrice.replace(/[\$,]/g, '')) - parseFloat(listPrice.replace(/[\$,]/g, ''));
 
       statDate = row['Stat Date'];
+      statDate = formatDateToShortString(new Date(statDate));
 
-      data.push({ priceDrop,underOverList,  statDate });
+      data.push({ priceDrop, underOverList, statDate });
     }
   }
 
-  console.log("data: ", data);
-  // Example of sending a response
+  data.sort((a, b) => {
+    return new Date(a.statDate).getTime() - new Date(b.statDate).getTime();
+  });
+  
   res.status(200).json({ data });
 }
