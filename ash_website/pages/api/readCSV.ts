@@ -22,6 +22,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     let currentPrice: string;
     let priceDrop: number;
     let underOverList: number;
+    let city: string;
 
     for await (const row of stream) {
       listPrice = row['List Price'];
@@ -34,7 +35,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       statDate = row['Stat Date'];
       statDate = formatDateToShortString(new Date(statDate));
 
-      data.push({ priceDrop, underOverList, statDate });
+      city = row['City'];
+
+
+      data.push({ priceDrop, underOverList, statDate, city });
     }
   }
 

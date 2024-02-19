@@ -1,4 +1,5 @@
 export type ChartProps = {
-  startDate: Date;
-  endDate: Date;
+  startDate: Date|null;
+  endDate: Date|null;
+  fetchedData?: any;
 };

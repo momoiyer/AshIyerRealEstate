@@ -5,19 +5,19 @@ import { ChartProps } from './Chart.types';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const PriceDropBarChart = ({ startDate, endDate }: ChartProps) => {
-  const [fetchedData, setFetchedData] = useState([]); // State to hold the original fetched data
+const PriceDropBarChart = ({ startDate, endDate, fetchedData }: ChartProps) => {
+  // const [fetchedData, setFetchedData] = useState([]); // State to hold the original fetched data
   const [chartData, setChartData] = useState({ labels: [], datasets: [] }); // State for the data to render in the chart
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const response = await fetch('/api/readCSV');
-      const result = await response.json();
-      setFetchedData(result.data); 
-    };
+  // useEffect(() => {
+  //   const fetchData = async () => {
+  //     const response = await fetch('/api/readCSV');
+  //     const result = await response.json();
+  //     setFetchedData(result.data); 
+  //   };
 
-    fetchData();
-  }, []);
+  //   fetchData();
+  // }, []);
 
    // Filter fetched data whenever startDate, endDate, or fetchedData changes
    useEffect(() => {
