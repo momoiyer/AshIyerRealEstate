@@ -1,5 +1,6 @@
 import Graph from "@/components/Graph";
 import TableView from "@/components/TableView";
+import { FilterProvider } from "@/contexts/FilterContext";
 import { Inter } from "next/font/google";
 import { useEffect, useState } from "react";
 
@@ -8,13 +9,13 @@ const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const [currentView, setCurrentView] = useState('graph'); // Default view is 'graph'  
   const [fetchedData, setFetchedData] = useState([]); // State to hold the original fetched data
-  const [cityFilter, setCityFilter] = useState([]);
+  const [cityFilter, setCityFilter] = useState([]); //State to hold the filtered data
 
   useEffect(() => {
     const fetchData = async () => {
       const response = await fetch('/api/readCSV');
       const result = await response.json();
-      setFetchedData(result.data); 
+      setFetchedData(result.data);
     };
 
     fetchData();
@@ -24,18 +25,19 @@ export default function Home() {
     if (fetchedData) {
       const uniqueCities = Array.from(new Set(fetchedData.map(item => item.city)));
       if (uniqueCities)
-        setCityFilter(uniqueCities);}
-  },[fetchedData])
+        setCityFilter(uniqueCities);
+    }
+  }, [fetchedData]);
 
   return (
     <main>
-       <div className="flex space-x-4 mb-4">
-        <button 
+      <div className="flex space-x-4 mb-4">
+        <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           onClick={() => setCurrentView('graph')}>
           View Graph
         </button>
-        <button 
+        <button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           onClick={() => setCurrentView('table')}>
           View Table
@@ -43,10 +45,12 @@ export default function Home() {
       </div>
 
       {currentView === 'graph' &&
-        <Graph
-        data={fetchedData}
-        cityList={cityFilter}
-        />}
+        <FilterProvider>
+          <Graph
+            data={fetchedData}
+            cityList={cityFilter}
+          />
+        </FilterProvider>}
       {currentView === 'table' && <TableView data={fetchedData} />}
     </main>
   );
