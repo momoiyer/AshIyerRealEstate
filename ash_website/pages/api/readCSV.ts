@@ -16,29 +16,44 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const filePath = path.join(directoryPath, file);
     const stream = fs.createReadStream(filePath).pipe(csv());
 
-    let listPrice: string;
     let orgPrice: string;
-    let statDate: string;
+    let listPrice: string;
     let currentPrice: string;
+    let condoFee: string;
+    let beds: string;
+    let fullBaths: string;
+    let halfBaths: string;
+    let year: string;
+    let dom: string;
+    let statDate: string;
     let priceDrop: number;
     let underOverList: number;
     let city: string;
 
-    for await (const row of stream) {
-      listPrice = row['List Price'];
-      orgPrice = row['Original List Price'];
-      priceDrop = parseFloat(listPrice.replace(/[\$,]/g, '')) - parseFloat(orgPrice.replace(/[\$,]/g, ''));
 
+    for await (const row of stream) {
+
+      //get subdivision, sqft
+      
+      orgPrice = row['Original List Price'];
+      listPrice = row['List Price'];
       currentPrice = row['Current Price'];
+      condoFee = row['Condo Fee'];
+      beds = row['Beds'];
+      fullBaths = row['Full Baths'];
+      halfBaths = row['Half Baths'];
+      year = row['Year Built'];
+      dom = row['DOM'];
+
+      statDate = row['Stat Date'];      
+      statDate = formatDateToShortString(new Date(statDate)); 
+
+      city = row['City'];     
+
+      priceDrop = parseFloat(listPrice.replace(/[\$,]/g, '')) - parseFloat(orgPrice.replace(/[\$,]/g, ''));    
       underOverList = parseFloat(currentPrice.replace(/[\$,]/g, '')) - parseFloat(listPrice.replace(/[\$,]/g, ''));
 
-      statDate = row['Stat Date'];
-      statDate = formatDateToShortString(new Date(statDate));
-
-      city = row['City'];
-
-
-      data.push({ priceDrop, underOverList, statDate, city });
+      data.push({ orgPrice,listPrice, currentPrice, condoFee, beds, fullBaths, halfBaths, year, dom, statDate, city, priceDrop, underOverList });
     }
   }
 
